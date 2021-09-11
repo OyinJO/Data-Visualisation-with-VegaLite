@@ -1,0 +1,192 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "title": {
+    "text":"Irish Primary School Explorer",
+    "fontSize": 50,
+    "anchor": "middle"},
+	 "description": "Limitation: The color is always green no matter which Sex is chosen, though the data for the Sex chosen is correct",
+  "data": {
+    "url": "https://raw.githubusercontent.com/colmr/vis_class/master/primary_schools.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "columns": 2,
+  "concat": [
+    {
+      "data": {
+    "url": "https://raw.githubusercontent.com/colmr/vis_class/master/primary_schools.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "transform": [
+    {"filter": {"selection": "Gender"}},
+    {"filter": {"selection": "brush"}}
+  ],
+  "mark": "bar",
+  "selection": {
+    "Gender": {
+      "type": "multi", "fields": ["Sex"],"bind": "legend"
+    },
+    "Counties": {"type": "multi", "fields" : ["County"]}
+  },
+  "encoding": {
+    "x": {
+      "aggregate": "count",
+      "field": "County",
+      "type": "quantitative",
+      "axis": {"title": "Number of Schools",
+        "labelFontSize": 15,
+       "titleFontSize": 20
+       }
+    },
+    "y": {
+      "field": "County",
+      "type": "nominal",
+      "axis": {
+        "labelFontSize": 15,
+       "titleFontSize": 20
+      }
+    },
+    "color": {
+      "field": "Sex",
+      "type": "nominal",
+      "scale": {
+          "range": ["#3CB371", "#8a2be2", "#005cff"]
+        }
+    },
+    "opacity": {
+      "condition": {
+        "selection": "Counties", 
+        "value": 1, 
+        "stack": null
+        },
+      "value": 0.2
+    }
+  },
+  "width": 200,
+  "height": 600
+    },
+
+
+
+    {
+      "width": 600,
+   "height": 600,
+      "layer": [
+   {
+    "mark": {
+      "type": "geoshape",
+     "stroke": "white",
+     "fill": "#ddd"
+    },
+
+  "data": {
+    "url": "https://raw.githubusercontent.com/colmr/vis_class/master/Ireland_custom_topjson.json",
+    "format": {"type": "topojson", "feature": "IRL_adm1"}
+  }
+
+  },
+
+ 
+
+  {
+    "mark": "circle",
+    "data": {"url": "https://raw.githubusercontent.com/colmr/vis_class/master/primary_schools.csv"},
+    "transform": [
+      {"filter": {"selection": "Gender"}},
+      {"filter": {"selection": "Counties"}},
+      {"filter": {"selection": "brush"}}
+    ],
+
+    "selection": {
+      "Gender": {"type": "multi", "fields": ["Sex"], "bind": "legend"}
+    },
+    
+    "encoding": {
+      "longitude": {
+        "field": "Long",
+        "type": "quantitative"
+      },
+      "latitude": {
+        "field": "Lat",
+        "type": "quantitative"
+      },
+      "color": {
+        "field": "Sex", "type": "nominal",
+        "scale": {
+          "range": ["#3CB371", "#8a2be2", "#005cff"]
+        }
+      },
+      "size": {
+        "field": "Total",
+        "type": "quantitative",
+        "scale": {
+          "type":"threshold",
+          "symbol": "circle",
+          "domain": [251, 501, 750],
+          "range": [20,75,175,350]
+        }
+      },
+      "opacity": {
+        "condition": {"selection": "Gender", "value": 1},
+        "value": 0.2
+      }
+    }
+  }
+
+ ]
+
+    },
+
+    {
+      "data": {
+    "url": "https://raw.githubusercontent.com/colmr/vis_class/master/primary_schools.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": "bar",
+  "transform": [
+      {"filter": {"selection": "Gender"}},
+        {"filter": {"selection": "Counties"}}
+      
+    ],
+  "selection": {
+    "brush": {"type": "interval"}
+  },
+  "encoding": {
+    "x": {
+      "field": "Total",
+      "type": "quantitative",
+       "bin": {
+         "maxbins": 60
+         },
+       "axis": {"title": "Number of Students",
+       "labelFontSize": 15,
+       "titleFontSize": 20
+       }
+    },
+    "y": {
+     "aggregate": "count",
+     "type": "quantitative",
+     "axis": {"title": "Schools",
+     "labelFontSize": 15,
+       "titleFontSize": 20}
+    },
+    "color": {
+      "value": "black"
+    },
+    "opacity": {
+        "condition": {"selection": "brush", "value": 1},
+        "value": 0.4
+      }
+  },
+  "width": 600,
+  "height": 100
+    }
+  ]
+
+
+}
